@@ -111,7 +111,10 @@ export class StudentService {
     );
   }
 
-
+  showStudents():Observable<Student>{
+    const url = `${this.baseurl}/ShowStudent`;
+    return this.http.get<Student>(url);
+  }
   deleteStudent(studentId: number): Observable<void> {
     const url = `${this.baseurl}/DeleteStudent/${studentId}`;
     return this.http.delete<void>(url);

@@ -1,45 +1,97 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { passwordValidator } from '../../passwordValidator';
-import { CommonModule } from '@angular/common';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from '../../Services/core/account.service';
-import { HttpClientModule } from '@angular/common/http';
+import { User } from '../../models/user';
+import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../core/header/header.component';
 
 @Component({
   selector: 'app-register-form',
-  standalone: true,
-  imports: [ReactiveFormsModule,CommonModule,HttpClientModule,HeaderComponent],
   templateUrl: './register-form.component.html',
-  styleUrl: './register-form.component.css'
+  styleUrls: ['./register-form.component.css'],
+  standalone:true,
+  imports:[CommonModule,ReactiveFormsModule,HeaderComponent]
 })
 export class RegisterFormComponent {
-
   registerForm: FormGroup = new FormGroup({
     fullName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
   });
-  
 
+  passwordStrength: string = 'Very Weak';
+  criteria = {
+    length: false,
+    number: false,
+    uppercase: false,
+    lowercase: false,
+    symbol: false,
+  };
 
-  constructor(public accountService:AccountService) {
-     
+  constructor(public accountService: AccountService) {
+    this.registerForm.get('password')?.valueChanges.subscribe(password => this.checkPasswordStrength(password));
+  }
+
+  checkPasswordStrength(password: string) {
+    this.criteria.length = password.length >= 8;
+    this.criteria.number = /\d/.test(password);
+    this.criteria.uppercase = /[A-Z]/.test(password);
+    this.criteria.lowercase = /[a-z]/.test(password);
+    this.criteria.symbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    const strengthCriteria = Object.values(this.criteria).filter(value => value).length;
+
+    switch (strengthCriteria) {
+      case 0:
+      case 1:
+        this.passwordStrength = 'Very Weak';
+        break;
+      case 2:
+        this.passwordStrength = 'Weak';
+        break;
+      case 3:
+        this.passwordStrength = 'Medium';
+        break;
+      case 4:
+      case 5:
+        this.passwordStrength = 'Strong';
+        break;
+    }
   }
 
   register() {
-      
-    console.log(this.registerForm.get('email')?.value,this.registerForm.get('password')?.value)   ;
+    if (this.registerForm.valid) {
+      const user: User = new User(
+        this.registerForm.get('fullName')?.value,
+        this.registerForm.get('email')?.value,
+        this.registerForm.get('password')?.value,
+        this.registerForm.get('confirmPassword')?.value
+      );
 
-    this.accountService.register(this.registerForm.get('fullName')?.value,this.registerForm.get('email')?.value, this.registerForm.get('password')?.value ,this.registerForm.get('confirmPassword')?.value).then((success) => {
-      if (success) {
-        console.log("success")
-      } 
-    });
-
+      this.accountService.register(user).subscribe((result) => {
+        if (result) {
+          console.log("Registration successful");
+        } else {
+          console.log("Registration failed");
+        }
+      });
+    } else {
+      console.log("Form is not valid");
     }
+  }
 
+  getErrorMessage(field: string): string {
+    const control = this.registerForm.get(field);
 
- 
+    if (control?.hasError('required')) {
+      return 'Field is required';
+    } else if (control?.hasError('minlength')) {
+      return 'Min length is 3';
+    } else if (control?.hasError('email')) {
+      return 'Invalid email format';
+    } else {
+      return '';
+    }
+  }
 }

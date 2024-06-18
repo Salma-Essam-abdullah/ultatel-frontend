@@ -14,8 +14,14 @@
     imports: [DecimalPipe, FormsModule, AsyncPipe, NgbHighlight, NgbdSortableHeader, NgbPaginationModule,CommonModule,AgePipe],
     templateUrl: './student-table.component.html',
     providers: [StudentService, DecimalPipe],
+    
     styleUrls: ['./student-table.component.css']
   })
+
+
+
+
+  
   export class StudentTableComponent implements AfterViewInit {
     students$: Observable<Student[]>;
     total$: Observable<number>;
