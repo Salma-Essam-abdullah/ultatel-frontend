@@ -8,3 +8,12 @@
 .light-blue-backdrop {
     background-color: #5cb3fd;
 }
+
+.fa {
+    margin-left: 5px;
+  }
+  
+  .fa-arrow-up, .fa-arrow-down {
+    cursor: pointer;
+  }
+  

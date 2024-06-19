@@ -7,7 +7,7 @@ import { StudentService } from '../../Services/student.service';
 import { Student } from '../../models/student';
 import { AccountService } from '../../Services/core/account.service';
 import { NgbDateStruct, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-
+import Swal from 'sweetalert2'
 @Component({
   selector: 'app-add-student',
   standalone: true,
@@ -51,7 +51,13 @@ export class AddStudentComponent {
         this.addForm.get('appUserId')?.value
       );
       this.studentService.addStudent(this.userId, student).subscribe(result => {
+        
         console.log(result ? "Added successful" : "Added failed");
+        Swal.fire({
+          title: "Great!",
+          text: "Student Added Succesfully!",
+          icon: "success"
+        });
       });
     } else {
       console.log("Form is not valid");
