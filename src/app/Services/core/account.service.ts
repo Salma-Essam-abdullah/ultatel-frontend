@@ -73,5 +73,6 @@ export class AccountService {
   logout(): void {
     localStorage.removeItem("token");
     this.claims.isAuthenticated = false;
+   
   }
 }

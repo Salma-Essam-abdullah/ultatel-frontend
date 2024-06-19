@@ -7,8 +7,9 @@ import { StudentService } from './Services/student.service';
 
 import { AgePipe } from './pipes/age.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DecimalPipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes),provideHttpClient(),StudentService,AgePipe,NgSelectModule]
+  providers: [provideRouter(routes),provideHttpClient(),StudentService,AgePipe,NgSelectModule,DecimalPipe]
   
 };

@@ -63,4 +63,5 @@ export class AddStudentComponent {
       console.log("Form is not valid");
     }
   }
+  
 }

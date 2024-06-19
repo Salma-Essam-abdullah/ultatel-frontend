@@ -1,26 +1,5 @@
-nav {
-    background-color: #f8f9fa;
-    padding: 1em;
+
+  h1,svg{
+    cursor: pointer;
+    margin-left: 20px;
   }
-  
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  li {
-    display: inline;
-  }
-  
-  a {
-    text-decoration: none;
-    color: #007bff;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  

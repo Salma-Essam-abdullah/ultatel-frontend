@@ -1,75 +1,91 @@
+<div *ngIf="isLoggedIn">
+  <app-navbar></app-navbar>
+  <div class="container">
 
-<app-navbar></app-navbar>
-<div class="container">
+    <button class="btn btn-outline-primary mb-2 me-2" (click)="openXl(content)">Add Student</button>
 
-  <button class="btn btn-outline-primary mb-2 me-2" (click)="openXl(content)">Add Student</button>
-
-
-  <ng-template #content let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">Add Student</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-      <app-add-student></app-add-student>
-    </div>
-   
-  </ng-template>
-  
-  <div class="container mt-4">
-    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" formControlName="search" placeholder="Search students">
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="submit">Search</button>
-        </div>
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Add Student</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>
-    </form>
-  
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Gender</th>
-          <th>Birth Date</th>
-          <th>Country</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let student of students">
-          <td>{{ student.firstName }}</td>
-          <td>{{ student.lastName }}</td>
-          <td>{{ student.email }}</td>
-          <td>{{ student.gender }}</td>
-          <td>{{ student.birthDate | age }}</td>
-          <td>{{ student.country }}</td>
-          <button class="btn btn-info btn-sm" (click)="show(student.id)">Show</button>
-          <button class="btn btn-danger btn-sm" (click)="delete(student.id)">Delete</button>
-          <button class="btn btn-warning" (click)="openEditModal(student.id)">Edit Student</button>
+      <div class="modal-body">
+        <app-add-student></app-add-student>
+      </div>
+    </ng-template>
 
-        </tr>
-      </tbody>
-    </table>
-  
-    <ngb-pagination [collectionSize]="totalItems" [(page)]="pageIndex" [pageSize]="pageSize" (pageChange)="onPageChange($event)">
-    </ngb-pagination>
-    <div class="pagination-controls">
-      <button class="btn btn-outline-secondary" (click)="goToFirstPage()">First Page</button>
-      <button class="btn btn-outline-secondary" (click)="goToLastPage()">Last Page</button>
+    <div class="container mt-4">
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" formControlName="search" placeholder="Search students">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </div>
+      </form>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th >First Name  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('firstName')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+            </svg> </th>
+            <th >Last Name  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('lastName')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+            </svg> </th>
+            <th >Email  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('email')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+            </svg> </th>
+            <th > Gender  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('gender')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+            </svg> </th>
+            <th >Birth Date  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('birthDate')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+            </svg> </th>
+            <th > Country  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('country')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+            </svg> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="students.length === 0">
+            <td colspan="7" class="no-students-message text-danger">
+              No students found.
+            </td>
+          </tr>
+          <tr *ngFor="let student of students">
+            <td>{{ student.firstName }}</td>
+            <td>{{ student.lastName }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.birthDate | age }}</td>
+            <td>{{ student.country }}</td>
+            <td>
+              <button class="btn btn-info btn-sm" (click)="show(student.id)">Show</button>
+              <button class="btn btn-danger btn-sm" (click)="delete(student.id)">Delete</button>
+              <button class="btn btn-warning" (click)="openEditModal(student.id)">Edit Student</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ngb-pagination [collectionSize]="totalItems" [(page)]="pageIndex" [pageSize]="pageSize" (pageChange)="onPageChange($event)">
+      </ngb-pagination>
+      <div class="pagination-controls">
+        <button class="btn btn-outline-secondary" (click)="goToFirstPage()">First Page</button>
+        <button class="btn btn-outline-secondary" (click)="goToLastPage()">Last Page</button>
+      </div>
+
+      <div class="form-group">
+        <label for="pageSize">Entries per page:</label>
+        <select id="pageSize" class="form-control" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+          <option *ngFor="let size of [10, 20, 30, 40, 50]" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+      <div>Total Items: {{ totalItems }}</div>
+      <div>{{ getCurrentRange() }}</div>
+
     </div>
 
-    <div class="form-group">
-      <label for="pageSize">Entries per page:</label>
-      <select id="pageSize" class="form-control" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
-        <option *ngFor="let size of [10, 20, 30, 40, 50]" [value]="size">{{ size }}</option>
-      </select>
-    </div>
-    <div>Total Items: {{ totalItems }}</div>
-    <div>{{ getCurrentRange() }}</div>
-    
   </div>
-  
-  </div>
-  
+</div>

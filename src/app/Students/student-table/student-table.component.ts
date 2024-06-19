@@ -11,6 +11,7 @@ import { AddStudentComponent } from '../add-student/add-student.component';
 import { EditStudentComponent } from '../edit-student/edit-student.component';
 import { AccountService } from '../../Services/core/account.service';
 import { NavbarComponent } from '../../core/navbar/navbar.component';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-student-table',
@@ -24,7 +25,10 @@ import { NavbarComponent } from '../../core/navbar/navbar.component';
 
 
 export class StudentTableComponent {
+  errorMessage: string = '';
+ 
 
+  
 
   openEditModal(studentId: number) {
     const modalRef = this.modalService.open(EditStudentComponent, { size: 'xl' });
@@ -37,19 +41,24 @@ export class StudentTableComponent {
     this.modalService.open(content, { size: 'xl' });    
   }
 
+  isLoggedIn: boolean = false; 
   students: Student[] = [];
   totalItems: number = 0;
   pageIndex: number = 1;
   pageSize: number = 10;
   searchForm: FormGroup;
-  userId: string = this.accountService.getClaims().UserId; // Set your userId here
+  userId: string = this.accountService.getClaims().UserId; 
   sortField: string = 'firstName';
   sortDirection: 'asc' | 'desc' = 'asc';
+  
 
   constructor(private studentService: StudentService, private fb: FormBuilder,private agePipe: AgePipe ,public accountService:AccountService) {
+    const token = localStorage.getItem("token");
+    this.isLoggedIn = !!token; 
     this.searchForm = this.fb.group({
       search: ['']
     });
+    
   }
 
   ngOnInit(): void {
@@ -58,6 +67,15 @@ export class StudentTableComponent {
 
   loadStudents(): void {
     this.studentService.showStudentsByUserId(this.userId, this.pageIndex, this.pageSize)
+      .pipe(
+        catchError((error) => {
+
+
+         this.errorMessage = 'Error loading students. Please try again later.';
+          console.error('Error loading students:', error);
+          return throwError(this.errorMessage);
+        })
+      )
       .subscribe((response: StudentResponse) => {
         this.students = response.data;
         this.totalItems = response.count;
@@ -160,6 +178,29 @@ export class StudentTableComponent {
     }
   }
   
+  
+  sortData(field: keyof Student): void {
+    if (field === this.sortField) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+    
+    // Perform sorting
+    this.students.sort((a, b) => {
+      const aValue = a[field];
+      const bValue = b[field];
+      
+      if (aValue! < bValue!) {
+        return this.sortDirection === 'asc' ? -1 : 1;
+      } else if (aValue! > bValue!) {
+        return this.sortDirection === 'asc' ? 1 : -1;
+      } else {
+        return 0;
+      }
+    });
+  }
   
   
 

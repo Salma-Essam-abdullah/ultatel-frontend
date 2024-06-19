@@ -8,8 +8,15 @@
             <div class="card-body">
               <h2 class="text-uppercase text-center mb-4">Register</h2>
 
+              <!-- Error Alert -->
+              <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+                {{ errorMessage }}
+              </div>
+
+              <!-- Registration Form -->
               <form [formGroup]="registerForm" (ngSubmit)="register()">
 
+                <!-- Full Name -->
                 <div data-mdb-input-init class="form-outline mb-3">
                   <label class="form-label" for="fullName">Full Name</label>
                   <input type="text" id="fullName" formControlName="fullName" class="form-control form-control-lg" />
@@ -19,8 +26,9 @@
                   </div>
                 </div>
 
+                <!-- Email -->
                 <div data-mdb-input-init class="form-outline mb-3">
-                  <label class="form-label" for="email"> Email</label>
+                  <label class="form-label" for="email">Email</label>
                   <input type="email" id="email" formControlName="email" class="form-control form-control-lg" />
                   <div *ngIf="registerForm.get('email')?.errors && registerForm.get('email')?.touched" class="text-danger">
                     <span *ngIf="registerForm.get('email')?.getError('required')">Email is required</span>
@@ -28,6 +36,7 @@
                   </div>
                 </div>
 
+                <!-- Password -->
                 <div data-mdb-input-init class="form-outline mb-3">
                   <label class="form-label" for="password">Password</label>
                   <input type="password" id="password" formControlName="password" class="form-control form-control-lg" />
@@ -36,6 +45,7 @@
                     <span *ngIf="registerForm.get('password')?.getError('minlength')">Min length is 8</span>
                   </div>
 
+                  <!-- Password Strength Indicator -->
                   <div *ngIf="passwordStrength" class="alert alert-info mt-3">
                     <p>Password Strength: {{ passwordStrength }}</p>
                     <ul>
@@ -48,20 +58,26 @@
                   </div>
                 </div>
 
+                <!-- Confirm Password -->
                 <div data-mdb-input-init class="form-outline mb-3">
                   <label class="form-label" for="confirmPassword">Confirm Password</label>
                   <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control form-control-lg" />
-                  <div *ngIf="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched" class="text-danger">
+                  <div *ngIf="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
+                    class="text-danger">
                     <span *ngIf="registerForm.get('confirmPassword')?.getError('required')">Confirm Password is required</span>
                     <span *ngIf="registerForm.get('confirmPassword')?.getError('minlength')">Min length is 8</span>
                   </div>
                 </div>
 
+                <!-- Register Button -->
                 <div class="d-flex justify-content-center">
-                  <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary text-white btn-block btn-lg gradient-custom-4">Register</button>
+                  <button type="submit" data-mdb-button-init data-mdb-ripple-init
+                    class="btn btn-primary text-white btn-block btn-lg gradient-custom-4">Register</button>
                 </div>
 
-                <p class="text-center text-muted mt-1 mb-0">Have already an account? <a href="#!" class="fw-bold text-body"><u>Login here</u></a></p>
+                <!-- Login Link -->
+                <p class="text-center text-muted mt-1 mb-0">Already have an account? <a routerLink="/login"
+                    class="fw-bold text-body"><u>Login here</u></a></p>
               </form>
             </div>
           </div>

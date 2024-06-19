@@ -4,15 +4,18 @@ import { AccountService } from '../../Services/core/account.service';
 import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../core/header/header.component';
+import { Router, RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css'],
   standalone:true,
-  imports:[CommonModule,ReactiveFormsModule,HeaderComponent]
+  imports:[CommonModule,ReactiveFormsModule,HeaderComponent,RouterLink]
 })
 export class RegisterFormComponent {
+
   registerForm: FormGroup = new FormGroup({
     fullName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -29,7 +32,9 @@ export class RegisterFormComponent {
     symbol: false,
   };
 
-  constructor(public accountService: AccountService) {
+  errorMessage: string = '';
+
+  constructor(public accountService: AccountService, public router: Router) {
     this.registerForm.get('password')?.valueChanges.subscribe(password => this.checkPasswordStrength(password));
   }
 
@@ -69,21 +74,26 @@ export class RegisterFormComponent {
         this.registerForm.get('confirmPassword')?.value
       );
 
-      this.accountService.register(user).subscribe((result) => {
-        if (result) {
+      this.accountService.register(user).subscribe(
+        (result) => {
           console.log("Registration successful");
-        } else {
-          console.log("Registration failed");
+          this.router.navigate(['/login']);
+          
+        },
+        (error) => {
+          console.error("Registration error:", error);
+          this.errorMessage = 'Registration failed. Please try again later.';
         }
-      });
+      );
     } else {
       console.log("Form is not valid");
+      
+      this.errorMessage = 'Please fill out all required fields correctly.'; 
     }
   }
 
   getErrorMessage(field: string): string {
     const control = this.registerForm.get(field);
-
     if (control?.hasError('required')) {
       return 'Field is required';
     } else if (control?.hasError('minlength')) {

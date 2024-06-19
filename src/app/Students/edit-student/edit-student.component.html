@@ -35,7 +35,14 @@
                   </div>
                   <div class="form-outline mb-3">
                     <label class="form-label" for="gender">Gender</label>
-                    <ng-select [items]="items" bindLabel="name" bindValue="name" formControlName="gender"></ng-select>
+                    <ng-select
+                        [items]="items"
+                        bindLabel="name"
+                        bindValue="name"
+                     
+                        formControlName="gender"
+                        class="ng-select-custom bg"
+                      ></ng-select>
                     <div *ngIf="editForm.get('gender')?.errors && editForm.get('gender')?.touched" class="text-danger">
                       <span *ngIf="editForm.get('gender')?.getError('required')">Gender is required</span>
                     </div>
