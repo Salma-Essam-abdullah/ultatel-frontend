@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, PipeTransform } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { Student } from '../models/student';
-import { debounceTime, delay, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, delay, map, switchMap, tap } from 'rxjs/operators';
 import { SortColumn, SortDirection } from '../directives/sortable.directive';
 import { DecimalPipe } from '@angular/common';
 
@@ -122,5 +122,31 @@ export class StudentService {
   showStudent(studentId: number): Observable<Student> {
     const url = `${this.baseurl}/ShowStudent/${studentId}`;
     return this.http.get<Student>(url);
+  }
+  addStudent(userId: string, student: Student): Observable<any> {
+    const url = `${this.baseurl}/addStudent/${userId}`;
+    return this.http.post<any>(url,student).pipe(
+      map((response) => {
+        console.log(response);
+        return response;
+      }),
+      catchError((error) => {
+        console.error("Error occurred during adding student:", error);
+        return of(null);
+      })
+    );
+  }  
+  editStudent(id: number, student: Student):  Observable<any> {
+    const url = `${this.baseurl}/updateStudent/${id}`;
+    return this.http.patch<any>(url,student).pipe(
+      map((response) => {
+        console.log(response);
+        return response;
+      }),
+      catchError((error) => {
+        console.error("Error occurred during updating student:", error);
+        return of(null);
+      })
+    );
   }
 }

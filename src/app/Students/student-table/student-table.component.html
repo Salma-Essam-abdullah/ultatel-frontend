@@ -1,7 +1,35 @@
 <div class="container">
+
+  <button class="btn btn-outline-primary mb-2 me-2" (click)="openXl(content)">Add Student</button>
+
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Add Student</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <app-add-student></app-add-student>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+
+    <!-- edit -->
+  </ng-template>
+  <ng-template #editContent let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Edit Student</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <app-edit-student></app-edit-student>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>
     <form>
-     
-  
       <table class="table table-striped">
         <thead>
           <tr>
@@ -13,6 +41,7 @@
             <th scope="col" sortable="country" (sort)="onSort($event)">Country</th>
             <th scope="col">Delete</th>
             <th scope="col">Show</th>
+            <th scope="col">Edit</th>
           </tr>
         </thead>
         <tbody>
@@ -29,6 +58,12 @@
               </td> 
               <td>
                 <button class="btn btn-info" (click)="show(student.id)">Show</button>
+              </td> 
+              <td>
+                <!-- editstudent -->
+                <button class="btn btn-warning" (click)="openEditModal(student.id)">Edit Student</button>
+
+               
               </td> 
             </tr>
           </ng-container>

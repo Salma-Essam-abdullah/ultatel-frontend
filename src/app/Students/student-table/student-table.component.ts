@@ -1,28 +1,39 @@
   import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
-  import { Component, QueryList, ViewChildren, AfterViewInit } from '@angular/core';
+  import { Component, QueryList, ViewChildren, AfterViewInit, inject, TemplateRef } from '@angular/core';
   import { Observable, of, switchMap } from 'rxjs';
   import { FormsModule } from '@angular/forms';
-  import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+  import { NgbHighlight, NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
   import { Student } from '../../models/student';
   import { StudentService } from '../../Services/student.service';
   import { NgbdSortableHeader, SortEvent } from '../../directives/sortable.directive';
   import { AgePipe } from '../../pipes/age.pipe';
   import Swal from 'sweetalert2'
+import { AddStudentComponent } from '../add-student/add-student.component';
+import { EditStudentComponent } from '../edit-student/edit-student.component';
   @Component({
     selector: 'app-student-table',
     standalone: true,
-    imports: [DecimalPipe, FormsModule, AsyncPipe, NgbHighlight, NgbdSortableHeader, NgbPaginationModule,CommonModule,AgePipe],
+    imports: [DecimalPipe, FormsModule, AsyncPipe, NgbHighlight, NgbdSortableHeader, NgbPaginationModule,CommonModule,AgePipe,AddStudentComponent,EditStudentComponent],
     templateUrl: './student-table.component.html',
     providers: [StudentService, DecimalPipe],
     
     styleUrls: ['./student-table.component.css']
   })
 
-
-
-
   
   export class StudentTableComponent implements AfterViewInit {
+
+
+    openEditModal(studentId: number) {
+      const modalRef = this.modalService.open(EditStudentComponent, { size: 'xl' });
+      modalRef.componentInstance.studentId = studentId;
+    }
+
+
+    private modalService = inject(NgbModal);
+    openXl(content: TemplateRef<any>) {
+      this.modalService.open(content, { size: 'xl' });
+    }
     students$: Observable<Student[]>;
     total$: Observable<number>;
 
@@ -126,5 +137,8 @@ show(studentId: number) {
     }
   );
 }
+
+
+
   }
 
