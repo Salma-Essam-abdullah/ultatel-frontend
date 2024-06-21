@@ -20,15 +20,29 @@ import { RouterLink } from '@angular/router';
     <div class="offcanvas-body">
       <ul class="nav flex-column">
         <li class="nav-item">
-          <a routerLink="/students" class="nav-link text-black" (click)="activeOffcanvas.close('Students')" >Students</a>
+          <a
+            routerLink="/students"
+            class="nav-link text-black"
+            (click)="activeOffcanvas.close('Students')"
+            >Students</a
+          >
         </li>
         <li class="nav-item">
-          <a routerLink="/login" class="nav-link text-black" (click)="activeOffcanvas.close('Login')">Login</a>
+          <a
+            routerLink="/login"
+            class="nav-link text-black"
+            (click)="activeOffcanvas.close('Login')"
+            >Login</a
+          >
         </li>
         <li class="nav-item">
-          <a routerLink="/register" class="nav-link text-black" (click)="activeOffcanvas.close('Register')">Register</a>
+          <a
+            routerLink="/register"
+            class="nav-link text-black"
+            (click)="activeOffcanvas.close('Register')"
+            >Register</a
+          >
         </li>
-       
       </ul>
     </div>
   `,
@@ -39,8 +53,8 @@ import { RouterLink } from '@angular/router';
         display: flex;
         flex-direction: column;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class NgbdOffcanvasContent {
   activeOffcanvas = inject(NgbActiveOffcanvas);

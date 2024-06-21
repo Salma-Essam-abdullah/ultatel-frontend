@@ -1,19 +1,63 @@
-.dark-modal .modal-content {
-    background-color: #292b2c;
-    color: white;
-}
-.dark-modal .close {
-    color: white;
-}
-.light-blue-backdrop {
-    background-color: #5cb3fd;
+.search-container {
+  background-color: #f8f9fa;
+  border-radius: 10px;
 }
 
-.fa {
-    margin-left: 5px;
-  }
-  
-  .fa-arrow-up, .fa-arrow-down {
-    cursor: pointer;
-  }
-  
+.table-responsive {
+  margin-top: 20px;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.table th {
+  cursor: pointer;
+}
+
+.table .sort-icon {
+  float: right;
+  cursor: pointer;
+}
+
+.material-icons {
+  cursor: pointer;
+}
+
+.material-icons.text-info {
+  color: #17a2b8;
+}
+
+.material-icons.text-danger {
+  color: #dc3545;
+}
+
+.material-icons.text-warning {
+  color: #ffc107;
+}
+
+.bg-success.text-white {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  margin: 0 5px;
+}
+
+.form-control {
+  border-radius: 5px;
+}
+
+.btn-primary,
+.btn-warning {
+  border-radius: 5px;
+}
