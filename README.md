@@ -18,7 +18,7 @@ Clone the repository:
 
 Install the required packages:
 
-    npm install
+    npm install --legacy-peer-deps
 
 Running the Application
 
