@@ -12,9 +12,10 @@ Ensure you have the following installed on your machine:
 
     Clone the repository:
 
-    bash
+ 
 
 git clone https://github.com/Salma-Essam-abdullah/ultatel-frontend
+
 cd ultatel-frontend-master
 
 Install the required packages:
