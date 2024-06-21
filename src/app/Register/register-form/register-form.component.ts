@@ -1,26 +1,38 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AccountService } from '../../Services/core/account.service';
 import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../core/header/header.component';
 import { Router, RouterLink } from '@angular/router';
 
-
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css'],
-  standalone:true,
-  imports:[CommonModule,ReactiveFormsModule,HeaderComponent,RouterLink]
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, RouterLink],
 })
 export class RegisterFormComponent {
-
   registerForm: FormGroup = new FormGroup({
-    fullName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    fullName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+    ]),
+    confirmPassword: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+    ]),
   });
 
   passwordStrength: string = 'Very Weak';
@@ -35,7 +47,11 @@ export class RegisterFormComponent {
   errorMessage: string = '';
 
   constructor(public accountService: AccountService, public router: Router) {
-    this.registerForm.get('password')?.valueChanges.subscribe(password => this.checkPasswordStrength(password));
+    this.registerForm
+      .get('password')
+      ?.valueChanges.subscribe((password) =>
+        this.checkPasswordStrength(password)
+      );
   }
 
   checkPasswordStrength(password: string) {
@@ -45,7 +61,9 @@ export class RegisterFormComponent {
     this.criteria.lowercase = /[a-z]/.test(password);
     this.criteria.symbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    const strengthCriteria = Object.values(this.criteria).filter(value => value).length;
+    const strengthCriteria = Object.values(this.criteria).filter(
+      (value) => value
+    ).length;
 
     switch (strengthCriteria) {
       case 0:
@@ -76,19 +94,21 @@ export class RegisterFormComponent {
 
       this.accountService.register(user).subscribe(
         (result) => {
-          console.log("Registration successful");
-          this.router.navigate(['/login']);
-          
+          if (result) {
+            console.log('Registration successful');
+            this.router.navigate(['/login']);
+          } else {
+            this.errorMessage = 'Registration failed. Please try again later. ';
+          }
         },
         (error) => {
-          console.error("Registration error:", error);
+          console.error('Registration error:', error);
           this.errorMessage = 'Registration failed. Please try again later.';
         }
       );
     } else {
-      console.log("Form is not valid");
-      
-      this.errorMessage = 'Please fill out all required fields correctly.'; 
+      console.log('Form is not valid');
+      this.errorMessage = 'Please fill out all required fields correctly.';
     }
   }
 
