@@ -2,49 +2,78 @@
   <app-navbar></app-navbar>
   <div class="container">
 
-    <button class="btn btn-outline-primary mb-2 me-2" (click)="openXl(content)">Add Student</button>
-
-    <ng-template #content let-modal>
+    <ng-template #content let-modal >
       <div class="modal-header">
         <h4 class="modal-title">Add Student</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')" ></button>
       </div>
       <div class="modal-body">
-        <app-add-student></app-add-student>
+        <app-add-student (studentAdded)="UpdateTable($event)"></app-add-student>
       </div>
     </ng-template>
+    
+   
+  
+    <!-- <ng-template #edit let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Student</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')" ></button>
+      </div>
+      <div class="modal-body">
+        <app-add-student (studentAdded)="UpdateTable($event)"></app-add-student>
+      </div>
+    </ng-template> -->
+
 
     <div class="container mt-4">
-      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" formControlName="search" placeholder="Search students">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="submit">Search</button>
+    
+
+      <form (ngSubmit)="searchStudents()">
+        <div>
+          <label>Name</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" [(ngModel)]="searchDto.name" name="name" placeholder="Search Name">
           </div>
+          <label>Age From</label>
+          <div class="input-group mb-3">
+            <input type="number" class="form-control" [(ngModel)]="searchDto.ageFrom" name="ageFrom" placeholder="Age From">
+          </div>
+          <label>Age To</label>
+          <div class="input-group mb-3">
+            <input type="number" class="form-control" [(ngModel)]="searchDto.ageTo" name="ageTo" placeholder="Age To">
+          </div>
+          <label>Country</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" [(ngModel)]="searchDto.country" name="country" placeholder="Country">
+          </div>
+         
+          <div>
+            <label>Gender</label>
+            <select [(ngModel)]="searchDto.gender" class="form-control" name="gender" >
+             
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div><br/>
+        </div>
+        <div class="input-group-append text-end">
+          <button class="btn btn-primary"  type="submit">Search</button>
+          <button class="btn btn-warning"  (click)="reset()">Reset</button>
         </div>
       </form>
-
+      <i class="material-icons bg-success text-white fs-2 rounded-2" (click)="openXl(content, null)">add</i>
       <table class="table table-striped">
         <thead>
           <tr>
-            <th >First Name  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('firstName')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-            </svg> </th>
-            <th >Last Name  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('lastName')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-            </svg> </th>
-            <th >Email  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('email')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-            </svg> </th>
-            <th > Gender  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('gender')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-            </svg> </th>
-            <th >Birth Date  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('birthDate')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-            </svg> </th>
-            <th > Country  <svg xmlns="http://www.w3.org/2000/svg" (click)="sortData('country')" width="25" height="25" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-              <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-            </svg> </th>
+            
+            <th> First Name<i class="material-icons sort-icon" (click)="sortData('firstName')">unfold_more</i></th>
+            <th> Last Name<i class="material-icons sort-icon" (click)="sortData('lastName')">unfold_more</i></th>
+            <th> Email<i class="material-icons sort-icon" (click)="sortData('email')">unfold_more</i></th>
+            <th> Gender<i class="material-icons sort-icon" (click)="sortData('gender')">unfold_more</i></th>
+            <th> Birth Date<i class="material-icons sort-icon" (click)="sortData('birthDate')">unfold_more</i></th>
+            <th> Country<i class="material-icons sort-icon" (click)="sortData('country')">unfold_more</i></th>
+            <th>Actions</th>
+            
           </tr>
         </thead>
         <tbody>
@@ -61,9 +90,10 @@
             <td>{{ student.birthDate | age }}</td>
             <td>{{ student.country }}</td>
             <td>
-              <button class="btn btn-info btn-sm" (click)="show(student.id)">Show</button>
-              <button class="btn btn-danger btn-sm" (click)="delete(student.id)">Delete</button>
-              <button class="btn btn-warning" (click)="openEditModal(student.id)">Edit Student</button>
+              <i class="material-icons text-info" (click)="show(student.id)">visibility</i>
+              <i class="material-icons text-danger" (click)="delete(student.id)">delete</i>
+              <i class="material-icons text-warning"  (click)="openEditModal(student)">edit</i> 
+              
             </td>
           </tr>
         </tbody>

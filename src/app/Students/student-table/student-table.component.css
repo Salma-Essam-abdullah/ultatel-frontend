@@ -17,3 +17,11 @@
     cursor: pointer;
   }
   
+
+  .material-icons {
+    font-size: 18px; /* Adjust the size as needed */
+    vertical-align: middle; /* Aligns icon with text */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    margin-right: 5px; /* Adds some space between icon and text */
+  }
+  

@@ -1,5 +1,6 @@
 
-  h1,svg{
+  span,i{
     cursor: pointer;
     margin-left: 20px;
+    margin-right: 20px;
   }

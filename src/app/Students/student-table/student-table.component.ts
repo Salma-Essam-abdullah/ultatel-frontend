@@ -1,14 +1,13 @@
 import {  CommonModule, DecimalPipe } from '@angular/common';
-import { Component ,inject, TemplateRef } from '@angular/core';
+import { Component ,inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {  NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Student } from '../../models/student';
-import { StudentResponse, StudentService } from '../../Services/student.service';
+import { StudentResponse, StudentSearchDto, StudentService } from '../../Services/student.service';
 import { AgePipe } from '../../pipes/age.pipe';
 import Swal from 'sweetalert2'
 import { AddStudentComponent } from '../add-student/add-student.component';
-import { EditStudentComponent } from '../edit-student/edit-student.component';
 import { AccountService } from '../../Services/core/account.service';
 import { NavbarComponent } from '../../core/navbar/navbar.component';
 import { catchError, throwError } from 'rxjs';
@@ -16,29 +15,48 @@ import { catchError, throwError } from 'rxjs';
 @Component({
   selector: 'app-student-table',
   standalone: true,
-  imports: [DecimalPipe, CommonModule,AgePipe,AddStudentComponent,EditStudentComponent,NgbPaginationModule,FormsModule,ReactiveFormsModule,NavbarComponent],
+  imports: [DecimalPipe, CommonModule,AgePipe,AddStudentComponent,NgbPaginationModule,FormsModule,ReactiveFormsModule,NavbarComponent],
   templateUrl: './student-table.component.html',
   providers: [StudentService, DecimalPipe],
-  
   styleUrls: ['./student-table.component.css']
 })
 
 
-export class StudentTableComponent {
-  errorMessage: string = '';
- 
+export class StudentTableComponent implements OnInit{
+  @ViewChild('content', { static: true }) content: TemplateRef<any> | undefined;
+  templateContext: any = null;
+  @ViewChild(AddStudentComponent) addStudentComponent: AddStudentComponent | undefined;
 
+  errorMessage: string = '';
+  openEditModal(student: Student) {
+    const modalRef = this.modalService.open(AddStudentComponent, { size: 'xl' });
+    modalRef.componentInstance.student = student;
+  }
+  
+  ngAfterViewInit(){
+    this.addStudentComponent?.studentAdded.subscribe(student =>{ this.UpdateTable(student);
+      console.log(student);
+    }
+  );
+  }
   
 
-  openEditModal(studentId: number) {
-    const modalRef = this.modalService.open(EditStudentComponent, { size: 'xl' });
-    modalRef.componentInstance.studentId = studentId;
-  }
+  // openEditModal(student:Student) {
+  //   const modalRef = this.modalService.open(AddStudentComponent, { size: 'xl' });
+  //   modalRef.componentInstance.student = student;
+  // }
 
 
   private modalService = inject(NgbModal);
-  openXl(content: TemplateRef<any>) {
-    this.modalService.open(content, { size: 'xl' });    
+  openXl(content: TemplateRef<any>, student: Student | null) {
+    this.modalService.open(content, { size: 'xl' }); 
+    this.editStudent(student!);   
+  }
+
+  editStudent(student: Student) {
+    this.templateContext = {
+      $implicit: student,
+    };
   }
 
   isLoggedIn: boolean = false; 
@@ -52,6 +70,9 @@ export class StudentTableComponent {
   sortDirection: 'asc' | 'desc' = 'asc';
   
 
+  searchDto: StudentSearchDto = {};
+
+
   constructor(private studentService: StudentService, private fb: FormBuilder,private agePipe: AgePipe ,public accountService:AccountService) {
     const token = localStorage.getItem("token");
     this.isLoggedIn = !!token; 
@@ -60,17 +81,33 @@ export class StudentTableComponent {
     });
     
   }
+  searchStudents() {
+    this.studentService.searchStudents(this.searchDto).subscribe(response => {
+      this.students = response;
+    });
+  }
+  reset(){
+    this.searchDto = {
+      name: '',
+      ageFrom: null,
+      ageTo: null,
+      country: '',
+      gender: '' 
+    };
+    this.students = [];
+    this.loadStudents();
+  }
 
+  
   ngOnInit(): void {
     this.loadStudents();
+   
   }
 
   loadStudents(): void {
     this.studentService.showStudentsByUserId(this.userId, this.pageIndex, this.pageSize)
       .pipe(
         catchError((error) => {
-
-
          this.errorMessage = 'Error loading students. Please try again later.';
           console.error('Error loading students:', error);
           return throwError(this.errorMessage);
@@ -149,9 +186,9 @@ export class StudentTableComponent {
     );
   }
 
-  onStudentEdited(updatedStudent: Student): void {
-    this.students = this.students.map(student => student.id === updatedStudent.id ? updatedStudent : student);
-  }
+  // onStudentEdited(updatedStudent: Student): void {
+  //   this.students = this.students.map(student => student.id === updatedStudent.id ? updatedStudent : student);
+  // }
 
   getCurrentRange(): string {
     if (this.totalItems === 0) {
@@ -202,7 +239,14 @@ export class StudentTableComponent {
     });
   }
   
-  
+  UpdateTable(AddedStudent:Student){
+    const studentIndex = this.students.findIndex(student =>AddedStudent.id === student.id);
+    if(studentIndex  != -1){
+      this.students[studentIndex] = AddedStudent;
+   
+    }
+    this.students.push(AddedStudent);
+  }
 
 }
 

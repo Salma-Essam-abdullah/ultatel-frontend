@@ -1,14 +1,11 @@
 <!-- navbar.component.html -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
  
-  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16" (click)="open()">
-    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
-  </svg>
+  <span class="navbar-toggler-icon bg"(click)="open()"></span>
     <div class="container-fluid">
-     
       <h1 class="navbar-brand text-info fw-bold"  >Ultatel</h1>
       <li class="nav-item list-unstyled">
-        <button class="btn btn-danger"><a routerLink="/logout" class="nav-link text-white" (click)="logout()">Logout</a></button>
+        <i routerLink="/logout" class="material-icons text-danger" (click)="logout()">logout</i>
       </li>
     </div>
   </nav>
