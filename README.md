@@ -24,7 +24,7 @@ Running the Application
 
 Start the development server:
 
-  ng serve -o
+    ng serve -o
 
 This command will compile the application and automatically open it in your default web browser. 
 If it does not open automatically, navigate to http://localhost:4200/ in your browser.
