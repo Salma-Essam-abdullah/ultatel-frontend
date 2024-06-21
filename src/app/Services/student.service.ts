@@ -32,8 +32,6 @@ export class StudentService {
 
   constructor(
     private http: HttpClient,
-    private pipe: DecimalPipe,
-    private accountService: AccountService
   ) {}
   searchStudents(searchDto: StudentSearchDto): Observable<Student[]> {
     const url = `${this.baseurl}/Search`;
