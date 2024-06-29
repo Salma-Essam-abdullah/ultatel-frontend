@@ -1,4 +1,108 @@
 button {
-    background-color: #36a9e1;
-    border-color: #36a9e1;
+  background-color: #36a9e1;
+  border-color: #36a9e1;
+  color: #fff;
+}
+
+img {
+  width: 50%;
+}
+
+.reset{
+  background-color: #000;
+  border-color: #000;
+}
+
+
+
+.alert {
+  padding: 7px;
+  margin-top: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.alert::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left:40px;
+  transform: translateX(-50%);
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent currentColor transparent;
+}
+
+.very-weak .alert-title , .medium .alert-title ,.weak .alert-title,.strong .alert-title  {
+  text-align: center;
+  border-radius: 5px;
+  font-weight: 600;
+}
+.very-weak .alert-title {
+  background-color: #ffd6d6; 
+  color: #721c24;
+}
+
+.weak .alert-title {
+  background-color: #ffe6cc; 
+  color: #853504; 
+}
+
+.medium .alert-title {
+  background-color: #fff3cd; 
+  color: #9c661f; 
+}
+
+.strong .alert-title {
+  background-color: #d4edda;
+  color: #155724; 
+}
+
+.very-weak::before {
+  color: #ff4242; 
+}
+
+.weak::before {
+  color: #ff5a07; 
+}
+
+.medium::before {
+  color: #ffc107; 
+}
+
+.strong::before {
+  color: green; 
+}
+
+.very-weak , .medium , .strong ,.weak{
+  position: relative;
+  padding-top: 6px;
+}
+
+.very-weak {
+  border: 2px solid rgb(255, 66, 66);
+
+}
+
+.weak {
+  border: 2px solid #ff5a07;
+}
+
+.medium {
+  border: 2px solid #ffc107;
+ 
+}
+
+.strong {
+  border: 2px solid green;
+
+}
+
+.alert-message {
+  font-size: 14px;
+  color: #a6a6a6;
+}
+
+.text-success {
+  font-weight: 700;
 }

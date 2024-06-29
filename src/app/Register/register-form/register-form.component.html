@@ -1,83 +1,277 @@
 <section class="pt-3 pb-3">
-  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+  <div class="mask d-flex align-items-center h-18 gradient-custom-3">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-          <app-header></app-header>
-          <div class="card" style="border-radius: 15px;">
+          <div class="row">
+            <div class="col-12 text-center mb-4 mt-4">
+              <img src="assets/images/logo.svg" alt="Logo" />
+            </div>
+          </div>
+          <div class="card" style="border-radius: 15px">
             <div class="card-body">
               <h2 class="text-uppercase text-center mb-4">Register</h2>
-
-              <!-- Error Alert -->
-              <div *ngIf="errorMessage" class="alert alert-danger mb-3">
-                {{ errorMessage }}
+              <div *ngIf="errors">
+                <div
+                  class="alert alert-danger"
+                  role="alert"
+                  *ngFor="let error of errors | keyvalue"
+                >
+                  {{ error.value }}
+                </div>
               </div>
-
-              <!-- Registration Form -->
-              <form [formGroup]="registerForm" (ngSubmit)="register()">
-
-                <!-- Full Name -->
+              <form
+                name="form"
+                #f="ngForm"
+                (ngSubmit)="f.form.valid && onSubmit()"
+                novalidate
+                [appMatchPassword]="['password', 'confirmPassword']"
+              >
                 <div data-mdb-input-init class="form-outline mb-3">
                   <label class="form-label" for="fullName">Full Name</label>
-                  <input type="text" id="fullName" formControlName="fullName" class="form-control form-control-lg" />
-                  <div *ngIf="registerForm.get('fullName')?.errors && registerForm.get('fullName')?.touched" class="text-danger">
-                    <span *ngIf="registerForm.get('fullName')?.getError('required')">Field is required</span>
-                    <span *ngIf="registerForm.get('fullName')?.getError('minlength')">Min length is 3</span>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    name="fullName"
+                    [(ngModel)]="form.fullName"
+                    required
+                    minlength="3"
+                    maxlength="20"
+                    #fullName="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && fullName.errors }"
+                  />
+                  <div
+                    *ngIf="f.submitted && fullName.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="fullName.errors['required']">
+                      Fullname is required
+                    </div>
+                    <div *ngIf="fullName.errors['minlength']">
+                      Full Name must be at least 3 characters
+                    </div>
+                    <div *ngIf="fullName.errors['maxlength']">
+                      Full Name must be at most 20 characters
+                    </div>
                   </div>
                 </div>
 
-                <!-- Email -->
+                <div data-mdb-input-init class="form-outline mb-3">
+                  <label class="form-label" for="userName">User Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    name="userName"
+                    [(ngModel)]="form.userName"
+                    required
+                    minlength="3"
+                    maxlength="20"
+                    #userName="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && userName.errors }"
+                  />
+                  <div
+                    *ngIf="f.submitted && userName.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="userName.errors['required']">
+                      UserName is required
+                    </div>
+                    <div *ngIf="userName.errors['minlength']">
+                      UserName must be at least 3 characters
+                    </div>
+                    <div *ngIf="userName.errors['maxlength']">
+                      UserName must be at most 20 characters
+                    </div>
+                  </div>
+                </div>
+
                 <div data-mdb-input-init class="form-outline mb-3">
                   <label class="form-label" for="email">Email</label>
-                  <input type="email" id="email" formControlName="email" class="form-control form-control-lg" />
-                  <div *ngIf="registerForm.get('email')?.errors && registerForm.get('email')?.touched" class="text-danger">
-                    <span *ngIf="registerForm.get('email')?.getError('required')">Email is required</span>
-                    <span *ngIf="registerForm.get('email')?.getError('email')">Invalid email format</span>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    name="email"
+                    [(ngModel)]="form.email"
+                    required
+                    email
+                    #email="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && email.errors }"
+                  />
+                  <div
+                    *ngIf="f.submitted && email.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="email.errors['required']">
+                      Email is required
+                    </div>
+                    <div *ngIf="email.errors['email']">Email is invalid</div>
                   </div>
                 </div>
 
-                <!-- Password -->
                 <div data-mdb-input-init class="form-outline mb-3">
                   <label class="form-label" for="password">Password</label>
-                  <input type="password" id="password" formControlName="password" class="form-control form-control-lg" />
-                  <div *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched" class="text-danger">
-                    <span *ngIf="registerForm.get('password')?.getError('required')">Password is required</span>
-                    <span *ngIf="registerForm.get('password')?.getError('minlength')">Min length is 8</span>
+                  <div class="input-group">
+                    <input
+                      type="{{ passwordFieldType }}"
+                      class="form-control form-control-lg"
+                      name="password"
+                      [(ngModel)]="form.password"
+                      required
+                      minlength="8"
+                      maxlength="50"
+                      #password="ngModel"
+                      [ngClass]="{
+                        'is-invalid': f.submitted && password.errors
+                      }"
+                      (input)="evaluateStrength()"
+                      (focus)="showStrength()"
+                      (blur)="hideStrength()"
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      (click)="togglePasswordVisibility()"
+                    >
+                      <i
+                        [ngClass]="
+                          passwordFieldType === 'password'
+                            ? 'fa fa-eye'
+                            : 'fa fa-eye-slash'
+                        "
+                      ></i>
+                    </button>
+                    <div
+                      *ngIf="f.submitted && password.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="password.errors['required']">
+                        Password is required
+                      </div>
+                      <div *ngIf="password.errors['minlength']">
+                        Password must be at least 8 characters
+                      </div>
+                      <div *ngIf="password.errors['maxlength']">
+                        Password must not exceed 50 characters
+                      </div>
+                    </div>
                   </div>
+                  <div
+                    class="alert"
+                    [ngClass]="strengthClass"
+                    *ngIf="strengthVisible"
+                  >
+                    <div class="alert-title">
+                      <p *ngIf="strengthClass === 'very-weak'" class="py-1">
+                        Very Weak
+                      </p>
+                      <p *ngIf="strengthClass === 'weak'" class="py-1">Weak</p>
+                      <p *ngIf="strengthClass === 'medium'" class="py-1">
+                        Medium
+                      </p>
+                      <p *ngIf="strengthClass === 'strong'" class="py-1">
+                        Strong
+                      </p>
+                    </div>
+                    <div class="alert-message">
+                      Password must be at least
+                      <span
+                        [ngClass]="{
+                          'text-success': criteria.minLength
+                        }"
+                        >8 characters and contain</span
+                      >
 
-                  <!-- Password Strength Indicator -->
-                  <div *ngIf="passwordStrength" class="alert alert-info mt-3">
-                    <p>Password Strength: {{ passwordStrength }}</p>
-                    <ul>
-                      <li [class.text-success]="criteria.length">At least 8 characters</li>
-                      <li [class.text-success]="criteria.number">1 number</li>
-                      <li [class.text-success]="criteria.uppercase">1 uppercase letter</li>
-                      <li [class.text-success]="criteria.lowercase">1 lowercase letter</li>
-                      <li [class.text-success]="criteria.symbol">1 symbol</li>
-                    </ul>
+                      <span [ngClass]="{ 'text-success': criteria.hasNumber }"
+                        >1 digit</span
+                      >,
+                      <span
+                        [ngClass]="{
+                          'text-success': criteria.hasUppercase
+                        }"
+                        >1 uppercase letter</span
+                      >,
+                      <span
+                        [ngClass]="{
+                          'text-success': criteria.hasLowercase
+                        }"
+                        >1 lowercase letter</span
+                      >
+                      and
+                      <span [ngClass]="{ 'text-success': criteria.hasSymbol }"
+                        >1 symbol.</span
+                      >
+                    </div>
                   </div>
                 </div>
 
-                <!-- Confirm Password -->
                 <div data-mdb-input-init class="form-outline mb-3">
-                  <label class="form-label" for="confirmPassword">Confirm Password</label>
-                  <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control form-control-lg" />
-                  <div *ngIf="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
-                    class="text-danger">
-                    <span *ngIf="registerForm.get('confirmPassword')?.getError('required')">Confirm Password is required</span>
-                    <span *ngIf="registerForm.get('confirmPassword')?.getError('minlength')">Min length is 8</span>
+                  <label class="form-label" for="confirmPassword"
+                    >Confirm Password</label
+                  >
+                  <div class="input-group">
+                  <input
+                  type="{{ confirmPasswordFieldType }}"
+                    type="password"
+                    class="form-control form-control-lg"
+                    name="confirmPassword"
+                    [(ngModel)]="form.confirmPassword"
+                    required
+                    #confirmPassword="ngModel"
+                    [ngClass]="{
+                      'is-invalid': f.submitted && confirmPassword.errors
+                    }"
+                  />
+                  <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="toggleConfirmPasswordVisibility()"
+                >
+                  <i
+                    [ngClass]="confirmPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                  ></i>
+                </button>
+                  <div
+                    *ngIf="f.submitted && confirmPassword.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="confirmPassword.errors['required']">
+                      Confirm Password is required
+                    </div>
+                    <div *ngIf="confirmPassword.errors['matching']">
+                      Confirm Password does not match
+                    </div>
                   </div>
                 </div>
+                </div>
 
-                <!-- Register Button -->
+          
                 <div class="d-flex justify-content-center">
-                  <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                    class="btn btn-primary text-white btn-block btn-lg gradient-custom-4">Register</button>
+                  <button
+                    type="submit"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    class="btn btn-primary text-white btn-block btn-lg gradient-custom-4"
+                  >
+                    Register
+                  </button>
+                  <div class="ms-3">
+                    <button
+                      type="button"
+                      (click)="onReset(f)"
+                      class="btn btn-warning text-white btn-block btn-lg gradient-custom-4 reset"
+                    >
+                      Reset
+                    </button>
+                  </div>
                 </div>
 
                 <!-- Login Link -->
-                <p class="text-center text-muted mt-1 mb-0">Already have an account? <a routerLink="/login"
-                    class="fw-bold text-body"><u>Login here</u></a></p>
+                <p class="text-center text-muted mt-1 mb-0">
+                  Already have an account?
+                  <a routerLink="/login" class="fw-bold text-body"
+                    ><u>Login here</u></a
+                  >
+                </p>
               </form>
             </div>
           </div>

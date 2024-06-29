@@ -1,18 +1,17 @@
 .ng-select-custom {
-    width: 100%;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px;
-  }
-  
-  .ng-select-custom .ng-placeholder {
-    color: #999;
-  }
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+}
 
+.ng-select-custom .ng-placeholder {
+  color: #999;
+}
 
-  ::ng-deep .ng-dropdown-panel .ng-option {
-    background-color: #ffffff; 
-    color: #000;
-    padding: 10px;
+::ng-deep .ng-dropdown-panel .ng-option {
+  background-color: #ffffff;
+  color: #000;
+  padding: 10px;
 }

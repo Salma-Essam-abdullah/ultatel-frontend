@@ -10,19 +10,21 @@ import { AccountService } from '../../Services/core/account.service';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
   private offcanvasService = inject(NgbOffcanvas);
+  UserName: string | undefined;
 
-
-  constructor(public accountService:AccountService,private router: Router){}
+  constructor(public accountService: AccountService, private router: Router) {
+    // this.UserName = this.accountService.getToken();
+  }
   open() {
     const offcanvasRef = this.offcanvasService.open(NgbdOffcanvasContent);
-    offcanvasRef.componentInstance.name = 'World';
+    offcanvasRef.componentInstance.name = 'World';  
   }
-  logout(){
+  logout() {
     this.accountService.logout();
-     this.router.navigate(['/login']);
+    this.router.navigate(['/login']);
   }
 }

@@ -1,107 +1,120 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from '../../Services/core/account.service';
-import { User } from '../../models/user';
-import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../core/header/header.component';
 import { Router, RouterLink } from '@angular/router';
-
+import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+import { MatchPasswordDirective } from '../../directives/match-password.directive';
+import { AccountResponse } from '../../Dtos/AccountResponse';
 
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css'],
-  standalone:true,
-  imports:[CommonModule,ReactiveFormsModule,HeaderComponent,RouterLink]
+  standalone: true,
+  imports: [FormsModule, CommonModule, MatchPasswordDirective,RouterLink]
 })
 export class RegisterFormComponent {
-
-  registerForm: FormGroup = new FormGroup({
-    fullName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
-  });
-
-  passwordStrength: string = 'Very Weak';
-  criteria = {
-    length: false,
-    number: false,
-    uppercase: false,
-    lowercase: false,
-    symbol: false,
+  form = {
+    fullName: '',
+    userName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   };
 
-  errorMessage: string = '';
+  errors: { [key: string]: string } | null = null;
 
-  constructor(public accountService: AccountService, public router: Router) {
-    this.registerForm.get('password')?.valueChanges.subscribe(password => this.checkPasswordStrength(password));
+  passwordFieldType: string = 'password';
+
+  confirmPasswordFieldType: string = 'password';
+
+  secretVisibilityType: string = 'password';
+
+  strengthMessage: string = '';
+  strengthClass: string = '';
+  criteria: any = {
+    minLength: false,
+    hasNumber: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasSymbol: false,
+  };
+  strengthVisible: boolean = false;
+
+
+  constructor(private accountService: AccountService, private router: Router) {}
+
+  onSubmit() {
+    this.accountService.register(this.form).subscribe((response: AccountResponse) => {
+      if (response.isSucceeded) {
+        console.log('Registration successful');
+        this.errors = null;
+        this.router.navigateByUrl('login');
+      } else {
+        console.error('Registration failed', response.errors);
+        this.errors = response.errors;
+      }
+    });
+  }
+  onReset(form: NgForm): void {
+    form.reset();
+  }
+  togglePasswordVisibility(): void {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+ 
+  }
+  toggleConfirmPasswordVisibility():void{
+    
+    
+    this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
   }
 
-  checkPasswordStrength(password: string) {
-    this.criteria.length = password.length >= 8;
-    this.criteria.number = /\d/.test(password);
-    this.criteria.uppercase = /[A-Z]/.test(password);
-    this.criteria.lowercase = /[a-z]/.test(password);
-    this.criteria.symbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  evaluateStrength() {
+    const password = this.form.password;
+    const minLength = password.length >= 8;
+    const hasNumber = /\d/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    const strengthCriteria = Object.values(this.criteria).filter(value => value).length;
+    this.criteria = {
+      minLength,
+      hasNumber,
+      hasUppercase,
+      hasLowercase,
+      hasSymbol,
+    };
 
-    switch (strengthCriteria) {
-      case 0:
-      case 1:
-        this.passwordStrength = 'Very Weak';
-        break;
-      case 2:
-        this.passwordStrength = 'Weak';
-        break;
-      case 3:
-        this.passwordStrength = 'Medium';
-        break;
-      case 4:
-      case 5:
-        this.passwordStrength = 'Strong';
-        break;
+    const FilterCriteria = Object.values(this.criteria).filter(Boolean).length;
+
+    if (FilterCriteria === 0 && password.length === 0) {
+      this.strengthMessage = '';
+      this.strengthClass = '';
+    } else if (FilterCriteria <= 2) {
+      this.strengthMessage = 'Very Weak';
+      this.strengthClass = 'very-weak';
+    } else if (FilterCriteria === 3) {
+      this.strengthMessage = 'Weak';
+      this.strengthClass = 'weak';
+    } else if (FilterCriteria === 4) {
+      this.strengthMessage = 'Medium';
+      this.strengthClass = 'medium';
+    } else if (FilterCriteria === 5) {
+      this.strengthMessage = 'Strong';
+      this.strengthClass = 'strong';
     }
   }
 
-  register() {
-    if (this.registerForm.valid) {
-      const user: User = new User(
-        this.registerForm.get('fullName')?.value,
-        this.registerForm.get('email')?.value,
-        this.registerForm.get('password')?.value,
-        this.registerForm.get('confirmPassword')?.value
-      );
-
-      this.accountService.register(user).subscribe(
-        (result) => {
-          console.log("Registration successful");
-          this.router.navigate(['/login']);
-          
-        },
-        (error) => {
-          console.error("Registration error:", error);
-          this.errorMessage = 'Registration failed. Please try again later.';
-        }
-      );
-    } else {
-      console.log("Form is not valid");
-      
-      this.errorMessage = 'Please fill out all required fields correctly.'; 
+  showStrength() {
+    this.strengthVisible = true;
+    if (!this.form.password) {
+      this.strengthClass = 'very-weak';
+      this.strengthMessage = 'Very Weak';
     }
   }
 
-  getErrorMessage(field: string): string {
-    const control = this.registerForm.get(field);
-    if (control?.hasError('required')) {
-      return 'Field is required';
-    } else if (control?.hasError('minlength')) {
-      return 'Min length is 3';
-    } else if (control?.hasError('email')) {
-      return 'Invalid email format';
-    } else {
-      return '';
-    }
+  hideStrength() {
+    this.strengthVisible = false;
   }
+
 }

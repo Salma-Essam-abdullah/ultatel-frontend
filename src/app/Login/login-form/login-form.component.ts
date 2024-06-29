@@ -1,55 +1,50 @@
-
 //////////
-
 import { Component } from '@angular/core';
 import { AccountService } from '../../Services/core/account.service';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserLogin } from '../../models/user-login';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { HeaderComponent } from '../../core/header/header.component';
+import { FormsModule, NgForm } from '@angular/forms';
+import { MatchPasswordDirective } from '../../directives/match-password.directive';
+import { AccountResponse } from '../../Dtos/AccountResponse';
+
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-imports: [ReactiveFormsModule,CommonModule,HttpClientModule,HeaderComponent,RouterLink],
+  imports: [FormsModule, CommonModule, MatchPasswordDirective,RouterLink],
   templateUrl: './login-form.component.html',
-  styleUrl: './login-form.component.css'
+  styleUrl: './login-form.component.css',
 })
 export class LoginFormComponent {
 
-  loginForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-  });
-
-  errorMessage: string = '';
-
-  constructor(public accountService: AccountService, public router: Router) {}
-
-  login() {
-    if (this.loginForm.valid) {
-      const user: UserLogin = new UserLogin(
-        this.loginForm.get('email')?.value,
-        this.loginForm.get('password')?.value
-      );
-
-      this.accountService.login(user).subscribe((result) => {
-        if (result) {
-          console.log("Login successful");
-          this.router.navigate(['/students']);
+    form = {
+      email: '',
+      password: ''
+    };
+  
+    errors: { [key: string]: string } | null = null;
+    passwordFieldType: string = 'password';
+  
+    constructor(private accountService: AccountService, private router: Router) {}
+  
+    onSubmit() {
+      this.accountService.login(this.form).subscribe((response: AccountResponse) => {
+        if (response.isSucceeded) {
+          console.log('Login successful');
+          this.errors = null;
+          localStorage.setItem("token",response.message);
+          this.router.navigateByUrl('students');
         } else {
-          console.log("Login failed");
-          this.errorMessage = 'Invalid credentials. Please try again.'; // Set error message for display
+          console.error('Login failed', response.errors);
+          this.errors = response.errors;
         }
-      }, error => {
-        console.error('Login error:', error);
-        this.errorMessage = 'An error occurred during login. Please try again later.'; // Set error message for display
       });
-    } else {
-      console.log("Form is not valid");
-      this.errorMessage = 'Please fill out all required fields correctly.'; // Set error message for display
     }
-  }
+  
+    togglePasswordVisibility(): void {
+  this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    }
+
+
+
 }
