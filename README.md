@@ -1,27 +1,42 @@
-# Ultatel
+Angular Simple CRUD with Search Sort Pagination..
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.6.
+This project is a simple Angular application that demonstrates basic CRUD (Create, Read, Update, Delete) operations with a search,pagination,sort features etc...
 
-## Development server
+Technologies Used:
+     Angular 17
+     HTML
+     CSS
+     Bootstrap
+     ng-bootstrap
+     Model
+     Datepicker
+     ng-select
+     sweetalert2
+  
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Ensure you have the following installed on your machine:
 
-## Code scaffolding
+    Node.js 
+    npm 
+    Angular CLI 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Installation:
 
-## Build
+Clone the repository:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+    git clone https://github.com/Salma-Essam-abdullah/ultatel-frontend
 
-## Running unit tests
+    cd ultatel-frontend-master
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Install the required packages:
 
-## Running end-to-end tests
+    npm install --legacy-peer-deps
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Running the Application
 
-## Further help
+Start the development server:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+    ng serve -o
+
+This command will compile the application and automatically open it in your default web browser. 
+If it does not open automatically, navigate to http://localhost:4200/ in your browser.
