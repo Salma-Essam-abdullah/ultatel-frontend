@@ -75,7 +75,7 @@
        <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>Student List</h2>
      
-      <div *ngIf="isSuperAdmin === 'true'">
+      <div *ngIf="isSuperAdmin === 'false'">
       <button (click)="onAddStudent()" class="btn btn-success">
           Add Student
         </button>
@@ -134,13 +134,16 @@
             <td>{{ student.country }}</td>
             <td>
               
-              <i class="material-icons text-info" (click)="show(student.id)">visibility</i>
+           
               <div *ngIf="isSuperAdmin === 'false'">
-                <i class="material-icons text-danger" (click)="delete(student.id)">delete</i>
+                <i class="material-icons text-info" (click)="show(student.id)">visibility</i>
                 <i class="material-icons text-warning" (click)="onEditStudent(student)">edit</i>
+                <i class="material-icons text-danger" (click)="delete(student.id)">delete</i>
+               
               </div>
               <div *ngIf="isSuperAdmin === 'true'">
                 <i class="material-icons text-secondary" (click)="showLogs(student.id)">assignment</i>
+                <i class="material-icons text-info" (click)="show(student.id)">visibility</i>
               </div>
 
          

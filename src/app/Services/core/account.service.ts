@@ -7,6 +7,8 @@ import { UserLogin } from '../../models/user-login';
 import { AccountResponse } from '../../Dtos/AccountResponse';
 import { session } from '../../models/session';
 import * as jwtDecode from 'jwt-decode'
+import { Router } from '@angular/router';
+import { routes } from '../../app.routes';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +22,7 @@ export class AccountService {
   
     
     user!: {  Email: string ,IsSuperAdmin:string,UserId:string , UserName:string};
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private router:Router) {
 
     this.token = null;
   }
@@ -44,7 +46,7 @@ export class AccountService {
     return this.http.post<AccountResponse>(url, user).pipe(
       map((response: AccountResponse) => {
         this.token = response.message;
-        
+        localStorage.setItem('token', this.token);
         return {
           message: response.message,
           isSucceeded: true,
@@ -62,16 +64,11 @@ export class AccountService {
     );
   }
 
-  getToken(){
-    
-    
 
-    return this.token;
-    
-  }
  
   logout(): void {
     localStorage.removeItem('token');
+    this.router.navigateByUrl('/login');
   }
 
 
@@ -91,4 +88,17 @@ export class AccountService {
     
   }
 
+
+
+  //login guard 
+  isTokenExpired(): boolean {
+    
+    if (this.token) {
+      const decodedToken: any = jwtDecode.jwtDecode(this.token);
+      const expirationDate = new Date(0);
+      expirationDate.setUTCSeconds(decodedToken.exp);
+      return expirationDate < new Date();
+    }
+    return true;
+  }
 }
