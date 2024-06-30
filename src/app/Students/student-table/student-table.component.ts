@@ -1,10 +1,7 @@
-  import { CommonModule, DecimalPipe } from '@angular/common';
+  import { CommonModule, DecimalPipe,DatePipe  } from '@angular/common';
   import {
     Component,
-    inject,
     OnInit,
-    TemplateRef,
-    ViewChild,
   } from '@angular/core';
 
   import {
@@ -21,14 +18,14 @@
   } from '../../Services/student.service';
   import { AgePipe } from '../../pipes/age.pipe';
   import Swal from 'sweetalert2';
-  import { AccountService } from '../../Services/core/account.service';
   import { NavbarComponent } from '../../core/navbar/navbar.component';
   import { StudentResponse } from '../../Dtos/StudentResponse';
   import { AccountResponse } from '../../Dtos/AccountResponse';
-  import { Search } from '../../models/search';
   import { NgSelectModule } from '@ng-select/ng-select';
   import { CountryService } from '../../Services/country.service';
   import { ModalComponent } from '../modal/modal.component';
+import { StudentLogs } from '../../models/student-logs';
+import { AccountService } from '../../Services/core/account.service';
 
   @Component({
     selector: 'app-student-table',
@@ -54,10 +51,12 @@
     sortBy: string = 'name'; 
     isDescending: boolean = false; 
     student:Student | undefined;
+    studentLogs:StudentLogs | undefined;
     errors: { [key: string]: string } | null = null;
     countries: any[] = [];
     form: any = {};
     isSearching: boolean = false; 
+     isSuperAdmin : string;
 
 
     genders = [
@@ -69,11 +68,18 @@
       private studentService: StudentService,
       private agePipe: AgePipe,
       private countryService: CountryService,
-      private modalService: NgbModal
-    ){}
+      private modalService: NgbModal,
+      private accountService: AccountService,
+      private datePipe: DatePipe
+    ){
+
+      this.isSuperAdmin = this.accountService.getClaims().IsSuperAdmin;
+    }
     ngOnInit(): void {
       this.loadStudents();
-    this.countries =  this.countryService.countries 
+    this.countries =  this.countryService.countries ;
+   
+
     }
 
     onSearch(form: NgForm) {
@@ -269,19 +275,6 @@
       this.pageIndex = 1;
       this.loadStudents();
     }
-    // openStudentModal(studentData?: any): void {
-    //   const modalRef = this.modalService.open(ModalComponent, { size: 'lg' });
-    //   modalRef.componentInstance.studentData = studentData;
-    //   modalRef.componentInstance.isEditMode = !!studentData;
-      
-    //   modalRef.result.then((result) => {
-    //     if (result) {
-    //       this.loadStudents(); // Reload students to update the table
-    //     }
-    //   }).catch((error) => {
-    //     console.error('Modal dismissed:', error);
-    //   });
-    // }
 
     onAddStudent() {
       const modalRef = this.modalService.open(ModalComponent);
@@ -319,10 +312,35 @@
         console.error('Error during modal handling:', error); // Debugging log
       });
     }
-  
-  
-  
+   
+    showLogs(studentId: string): void {
+      this.studentService.showStudentLogs(studentId).subscribe({
+        next: (logs) => {
+          Swal.fire({
+            title: 'Student Logs Information',
+            html: `
+              <p><strong>Created By:</strong> ${logs.createUserName}</p>
+              <p><strong>Created At:</strong> ${this.formatDate(logs.createTimeStamps)}</p>
+              <p><strong>Last Updated By:</strong> ${logs.updateUserName || 'N/A'}</p>
+              <p><strong>Updated At:</strong> ${this.formatDate(logs.updateTimeStamps) || 'N/A'}</p>
+            `
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching student logs:', err);
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to load student logs. Please try again later.',
+            icon: 'error'
+          });
+        }
+      });
+    }
     
     
-    
+    formatDate(dateString: string | null): string | null {
+      if (!dateString) return null;
+      const date = new Date(dateString);
+      return this.datePipe.transform(date, 'dd/MM/yyyy HH:mm');
+    }  
   }

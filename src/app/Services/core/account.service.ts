@@ -5,15 +5,21 @@ import { catchError, map } from 'rxjs/operators';
 import { User } from '../../models/user';
 import { UserLogin } from '../../models/user-login';
 import { AccountResponse } from '../../Dtos/AccountResponse';
+import { session } from '../../models/session';
+import * as jwtDecode from 'jwt-decode'
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class AccountService {
   private baseUrl = 'http://localhost:5017/api/authentication';
   private token: string | null;
+    public claims=new session('','','','');
 
- 
+  
+    
+    user!: {  Email: string ,IsSuperAdmin:string,UserId:string , UserName:string};
   constructor(private http: HttpClient) {
 
     this.token = null;
@@ -38,6 +44,7 @@ export class AccountService {
     return this.http.post<AccountResponse>(url, user).pipe(
       map((response: AccountResponse) => {
         this.token = response.message;
+        
         return {
           message: response.message,
           isSucceeded: true,
@@ -56,10 +63,32 @@ export class AccountService {
   }
 
   getToken(){
+    
+    
+
     return this.token;
+    
   }
  
   logout(): void {
     localStorage.removeItem('token');
   }
+
+
+  getClaims(): session {
+    let token = localStorage.getItem("token");
+    
+
+    if (typeof token === 'string' && token ) {
+      this.user = jwtDecode.jwtDecode(token);
+      console.log(this.user.IsSuperAdmin);
+      this.claims.UserName=this.user.UserName
+      this.claims.IsSuperAdmin = this.user.IsSuperAdmin
+    }
+   
+    
+    return this.claims;
+    
+  }
+
 }

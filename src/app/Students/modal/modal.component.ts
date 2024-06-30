@@ -61,7 +61,7 @@ export class ModalComponent implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
-    gender: null,
+    gender: '',
     birthDate: '',
     country: ''
   };
@@ -90,7 +90,7 @@ export class ModalComponent implements OnInit {
             firstName: this.studentData.firstName,
             lastName: this.studentData.lastName,
             email: this.studentData.email,
-            gender: this.studentData.gender,
+            gender: this.studentData.gender == '0' ?'Male' :'Female',
             birthDate: this.studentData.birthDate,
             country: this.studentData.country
           };
@@ -101,9 +101,6 @@ export class ModalComponent implements OnInit {
     this.activeModal.dismiss();
   }
 
-  onReset(form: NgForm): void {
-    form.reset();
-  }
   onSubmit(): void {
     const student = { ...this.form };
     const transformedDate = this.datePipe.transform(student.birthDate, 'yyyy-MM-dd');

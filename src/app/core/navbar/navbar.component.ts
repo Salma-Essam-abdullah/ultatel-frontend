@@ -17,7 +17,7 @@ export class NavbarComponent {
   UserName: string | undefined;
 
   constructor(public accountService: AccountService, private router: Router) {
-    // this.UserName = this.accountService.getToken();
+     this.UserName = this.accountService.getClaims().UserName;
   }
   open() {
     const offcanvasRef = this.offcanvasService.open(NgbdOffcanvasContent);

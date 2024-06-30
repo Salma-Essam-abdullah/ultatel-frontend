@@ -6,6 +6,7 @@ import { StudentResponse } from '../Dtos/StudentResponse';
 import { AccountResponse } from '../Dtos/AccountResponse';
 import { Search } from '../models/search';
 import { StudentForm } from '../models/student-form';
+import { StudentLogs } from '../models/student-logs';
 
 
 @Injectable({
@@ -147,9 +148,9 @@ export class StudentService {
       })
     );
   }
-  // showStudentLogs(studentId: number): Observable<StudentLogs[]> {
-  //   const url = `${this.baseurl}/Logs/${studentId}`;
-  //   return this.http.get<StudentLogs[]>(url);
-  // }
+  showStudentLogs(studentId: string): Observable<StudentLogs> {
+    const url = `${this.baseurl}/Logs/${studentId}`;
+    return this.http.get<StudentLogs>(url);
+  }
 
 }
