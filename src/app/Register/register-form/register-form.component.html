@@ -156,11 +156,11 @@
                     </div>
                   </div>
                   <div
-                    class="alert"
+                    class="alert pass"
                     [ngClass]="strengthClass"
                     *ngIf="strengthVisible"
                   >
-                    <div class="alert-title">
+                    <div class="pass-title">
                       <p *ngIf="strengthClass === 'very-weak'" class="py-1">
                         Very Weak
                       </p>
@@ -172,7 +172,7 @@
                         Strong
                       </p>
                     </div>
-                    <div class="alert-message">
+                    <div class="pass-message">
                       Password must be at least
                       <span
                         [ngClass]="{

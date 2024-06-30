@@ -15,14 +15,14 @@ img {
 
 
 
-.alert {
+.pass {
   padding: 7px;
   margin-top: 10px;
   border-radius: 5px;
   position: relative;
 }
 
-.alert::before {
+.pass::before {
   content: "";
   position: absolute;
   top: -10px;
@@ -33,27 +33,27 @@ img {
   border-color: transparent transparent currentColor transparent;
 }
 
-.very-weak .alert-title , .medium .alert-title ,.weak .alert-title,.strong .alert-title  {
+.very-weak .pass-title , .medium .pass-title ,.weak .pass-title,.strong .pass-title  {
   text-align: center;
   border-radius: 5px;
   font-weight: 600;
 }
-.very-weak .alert-title {
+.very-weak .pass-title {
   background-color: #ffd6d6; 
   color: #721c24;
 }
 
-.weak .alert-title {
+.weak .pass-title {
   background-color: #ffe6cc; 
   color: #853504; 
 }
 
-.medium .alert-title {
+.medium .pass-title {
   background-color: #fff3cd; 
   color: #9c661f; 
 }
 
-.strong .alert-title {
+.strong .pass-title {
   background-color: #d4edda;
   color: #155724; 
 }
@@ -98,7 +98,7 @@ img {
 
 }
 
-.alert-message {
+.pass-message {
   font-size: 14px;
   color: #a6a6a6;
 }

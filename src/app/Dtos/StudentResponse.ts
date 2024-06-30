@@ -11,7 +11,6 @@ export interface StudentResponse {
     pageSize: number;
     count: number;
     data: Student[];
-  };
-  students: Student[]; // This can be omitted if not used
+  } ;
   studentDto: Student;
 }

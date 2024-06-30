@@ -1,0 +1,117 @@
+button {
+    background-color: #36a9e1;
+    border-color: #36a9e1;
+    color: #fff;
+  }
+ form{
+  width: 100%;
+ }
+ /* Common styles for form controls */
+.form-control, .ng-select {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .ng-select:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.is-invalid.ng-select, .is-invalid.ng-select input, .is-invalid.ng-select .ng-select-container {
+  border-color: #dc3545;
+}
+
+.ng-select .ng-select-container {
+  border: none;
+}
+
+.ng-select .ng-select-container input {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+.ng-select .ng-select-container .ng-value-container {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+.ng-select .ng-select-container .ng-input input {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+.ng-select .ng-select-container .ng-arrow-wrapper {
+  padding: 0.5rem 0.75rem;
+}
+
+.ng-select .ng-select-container .ng-arrow-wrapper .ng-arrow {
+  border-width: 2px;
+}
+
+/* Adjust invalid-feedback styles */
+.ng-select ~ .invalid-feedback {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: none; /* Remove default border-bottom */
+  padding: 1rem; /* Adjust padding as needed */
+}
+
+.close {
+  background: none;
+  border: none;
+  color: #000; /* Adjust color as needed */
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.close:hover {
+  color: #555; /* Adjust hover color as needed */
+}
+
+.close:focus {
+  outline: none;
+}
+
+
+.input-group {
+  position: relative; /* Ensure relative positioning for absolute positioning of the button */
+}
+
+.input-group .input-group-text {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1; /* Ensure button is above the input */
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  color: #495057; /* Adjust color as needed */
+}
+
+.input-group .input-group-text:focus,
+.input-group .input-group-text:hover {
+  background-color: transparent;
+  color: #007bff; /* Adjust hover color as needed */
+}

@@ -1,0 +1,178 @@
+<section class="pt-3 pb-3 w-100">
+
+  <div class="modal-header">
+    <h4 class="modal-title">{{ isEditMode ? 'Edit Student' : 'Add Student' }} Form</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true" style="font-size: 1.5rem;">&times;</span>
+    </button>
+  </div>
+  
+  <div class="mask d-flex align-items-center  gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6 w-100">
+          <div class="card" style="border-radius: 15px">
+            <div class="card-body">
+              <div *ngIf="errors">
+                <div
+                  class="alert alert-danger"
+                  role="alert"
+                  *ngFor="let error of errors | keyvalue"
+                >
+                  {{ error.value }}
+                </div>
+              </div>
+              <form
+                name="form"
+                #f="ngForm"
+                (ngSubmit)="f.form.valid && onSubmit()"
+                novalidate
+              >
+                <div data-mdb-input-init class="form-outline mb-3">
+                  <label class="form-label" for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    name="firstName"
+                    [(ngModel)]="form.firstName"
+                    required
+                    #firstName="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && firstName.errors }"
+                  />
+                  <div
+                    *ngIf="f.submitted && firstName.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="firstName.errors['required']">
+                      Fullname is required
+                    </div>
+                  </div>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-3">
+                  <label class="form-label" for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    name="lastName"
+                    [(ngModel)]="form.lastName"
+                    required
+                    #lastName="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && lastName.errors }"
+                  />
+                  <div
+                    *ngIf="f.submitted && lastName.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="lastName.errors['required']">
+                      UserName is required
+                    </div>
+                  </div>
+                </div>
+                <div data-mdb-input-init class="form-outline mb-3">
+                  <label class="form-label" for="email">Email</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    name="email"
+                    [(ngModel)]="form.email"
+                    required
+                    email
+                    #email="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && email.errors }"
+                  />
+                  <div
+                    *ngIf="f.submitted && email.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="email.errors['required']">
+                      Email is required
+                    </div>
+                    <div *ngIf="email.errors['email']">Email is invalid</div>
+                  </div>
+                </div>
+                <label class="form-label" for="birthDate">Birth Date</label>
+               
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    name="birthDate"
+                    ngbDatepicker
+                    [(ngModel)]="form.birthDate"
+                    required
+                    #birthDate="ngModel"
+                    #d="ngbDatepicker"
+                    [ngClass]="{ 'is-invalid': f.submitted && birthDate.errors }"
+                  />
+                  <button class="input-group-text" (click)="d.toggle()" type="button">
+                    📅
+                  </button>
+                </div>
+                
+              
+                <div data-mdb-input-init class="form-outline mb-3">
+                  <label class="form-label" for="country">Country</label>
+                  <ng-select
+                    [items]="countries"
+                    bindLabel="name"
+                    bindValue="code"
+                    [(ngModel)]="form.country"
+                    name="country"
+                    required
+                    #country="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && country.errors }"
+                    placeholder="Select Country :"
+               
+                  >
+                  </ng-select>
+                  <div
+                    *ngIf="f.submitted && country.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="country.errors['required']">
+                      Country is required
+                    </div>
+                  </div>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-3">
+                  <label class="form-label" for="gender">Gender</label>
+                  <ng-select
+                    [items]="genders"
+                    bindLabel="name"
+                    bindValue="name"
+                    [(ngModel)]="form.gender"
+                    name="gender"
+                    required
+                    #gender="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && gender.errors }"
+                 
+                    placeholder="Select Gender :"
+                  >
+                  </ng-select>
+                  <div *ngIf="f.submitted && gender.errors" class="invalid-feedback">
+                    <div *ngIf="gender.errors['required']">Gender is required</div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                  <button
+                    type="submit"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    class="btn btn-primary text-white btn-block btn-lg gradient-custom-4"
+                  >
+                    Save
+                  </button>
+                 
+                </div>
+
+                
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

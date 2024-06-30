@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AccountService } from '../../Services/core/account.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatchPasswordDirective } from '../../directives/match-password.directive';
 import { AccountResponse } from '../../Dtos/AccountResponse';
 

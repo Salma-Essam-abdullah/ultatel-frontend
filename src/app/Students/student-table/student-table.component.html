@@ -1,99 +1,87 @@
-<div *ngIf="isLoggedIn">
+
   <app-navbar></app-navbar>
   <div class="container mt-5">
-    <ng-template #content let-modal>
-      <div class="modal-header">
-        <button
-          type="button"
-          class="btn-close"
-          aria-label="Close"
-          (click)="modal.dismiss('Cross click')"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <!-- <app-add-student (studentAdded)="UpdateTable($event)"></app-add-student> -->
-      </div>
-    </ng-template>
+   
 
     <div class="search-container my-4 p-3 rounded shadow-sm bg-light">
-      <!-- <form (ngSubmit)="searchStudents()">
-        <div class="row">
-          <div class="col-md-6">
-            <label for="name">Name</label>
-            <input
-              id="name"
-              type="text"
-              class="form-control mb-3"
-              [(ngModel)]="searchDto.name"
-              name="name"
-              placeholder="Search Name"
-            />
-          </div>
-          <div class="col-md-3">
-            <label for="ageFrom">Age From</label>
-            <input
-              id="ageFrom"
-              type="number"
-              class="form-control mb-3"
-              [(ngModel)]="searchDto.ageFrom"
-              name="ageFrom"
-              placeholder="Age From"
-            />
-          </div>
-          <div class="col-md-3">
-            <label for="ageTo">Age To</label>
-            <input
-              id="ageTo"
-              type="number"
-              class="form-control mb-3"
-              [(ngModel)]="searchDto.ageTo"
-              name="ageTo"
-              placeholder="Age To"
-            />
-          </div>
+      <form #f="ngForm" (ngSubmit)="f.form.valid && onSearch(f)" novalidate>
+        <div data-mdb-input-init class="form-outline mb-3">
+          <label class="form-label" for="name">Name</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            name="name"
+            [(ngModel)]="form.name"
+            #name="ngModel"
+          />
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <label for="country">Country</label>
-            <input
-              id="country"
-              type="text"
-              class="form-control mb-3"
-              [(ngModel)]="searchDto.country"
-              name="country"
-              placeholder="Country"
-            />
-          </div>
-          <div class="col-md-6">
-            <label for="gender">Gender</label>
-            <select
-              id="gender"
-              [(ngModel)]="searchDto.gender"
-              class="form-control mb-3"
-              name="gender"
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
+      
+        <label class="form-label" for="ageFrom">Age</label>
+        <div data-mdb-input-init class="form-outline mb-3">
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            name="ageFrom"
+            [(ngModel)]="form.ageFrom"
+            #ageFrom="ngModel"
+          />
+          To
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            name="ageTo"
+            [(ngModel)]="form.ageTo"
+            #ageTo="ngModel"
+          />
         </div>
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary me-2" type="submit">Search</button>
-          <button class="btn btn-warning" type="button" (click)="reset()">
-            Reset
-          </button>
+      
+        <div data-mdb-input-init class="form-outline mb-3">
+          <label class="form-label" for="gender">Gender</label>
+          <ng-select
+            [items]="genders"
+            bindLabel="name"
+            bindValue="name"
+            [(ngModel)]="form.gender"
+            name="gender"
+            #gender="ngModel"
+            placeholder="Select Gender :"
+            class="bg-white p-3 rounded-2 custom-dropdown"
+            
+          ></ng-select>
         </div>
-      </form> -->
-    </div>
+        <div data-mdb-input-init class="form-outline mb-3">
+          <label class="form-label" for="country">Country</label>
+          <ng-select
+            [items]="countries"
+            bindLabel="name"
+            bindValue="name"
+            [(ngModel)]="form.country"
+            name="country"
+            #country="ngModel"
+            placeholder="Select Country :"
+            [clearable]="true"
+            class="bg-white p-3 rounded-2 custom-dropdown"
+            
+          ></ng-select>
+        </div>
+        
+        
+        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="button" class="btn btn-secondary" (click)="resetSearch()">Reset</button>
+      </form>
+      
 
-    <!-- <div class="d-flex justify-content-between align-items-center mb-3">
+    
+
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>Student List</h2>
-      <div *ngIf="isAdmin == 'false'">
-        <button class="btn btn-success" (click)="openXl(content, null)">
+     
+      <button (click)="onAddStudent()" class="btn btn-success">
           Add Student
         </button>
       </div>
-    </div> -->
+    </div>
 
     <div class="table-responsive">
       <table class="table table-striped table-bordered">
@@ -105,15 +93,15 @@
                 
               </i>
             </th>
-            <th (click)="toggleSort('age')">
+            <th (click)="toggleSort('Age')">
               Age
-              <i class="material-icons sort-icon" [ngClass]="{'active': sortBy === 'age', 'asc': !isDescending, 'desc': isDescending}">
+              <i class="material-icons sort-icon" [ngClass]="{'active': sortBy === 'Age', 'asc': !isDescending, 'desc': isDescending}">
                 
               </i>
             </th>
-            <th (click)="toggleSort('gender')">
+            <th (click)="toggleSort('Gender')">
               Gender
-              <i class="material-icons sort-icon" [ngClass]="{'active': sortBy === 'gender', 'asc': !isDescending, 'desc': isDescending}">
+              <i class="material-icons sort-icon" [ngClass]="{'active': sortBy === 'Gender', 'asc': !isDescending, 'desc': isDescending}">
                 
               </i>
               
@@ -146,7 +134,7 @@
             <td>{{ student.email }}</td>
             <td>{{ student.country }}</td>
             <td>
-              <!-- Action buttons here -->
+             
               <i class="material-icons text-info" (click)="show(student.id)"
               >visibility</i
             >
@@ -155,11 +143,10 @@
               (click)="delete(student.id)"
               >delete</i
             >
-            <!-- <i
-              class="material-icons text-warning"
-              (click)="openEditModal(student)"
-              >edit</i
-            > -->
+            <i class="material-icons text-warning" (click)="onEditStudent(student)"
+            >edit</i
+          >
+            
             </td>
           </tr>
         </tbody>
