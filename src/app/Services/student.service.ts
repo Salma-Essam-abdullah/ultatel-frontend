@@ -13,7 +13,7 @@ import { StudentLogs } from '../models/student-logs';
   providedIn: 'root',
 })
 export class StudentService {
-  private baseurl = 'https://ultatelstudents.runasp.net/api/Student';
+  private baseurl = 'http://ultatel-students.us-east-2.elasticbeanstalk.com/api/Student';
   constructor(
     private http: HttpClient,
   ) {}
