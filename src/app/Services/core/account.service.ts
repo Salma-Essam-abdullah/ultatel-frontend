@@ -15,7 +15,7 @@ import { routes } from '../../app.routes';
 })
 
 export class AccountService {
-  private baseUrl = 'http://ultatelstudents.runasp.net//api/authentication';
+  private baseUrl = 'http://ultatelstudents.runasp.net/api/authentication';
   private token: string | null;
     public claims=new session('','','','');
 
