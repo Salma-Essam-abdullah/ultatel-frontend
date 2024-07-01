@@ -13,7 +13,7 @@ import { StudentLogs } from '../models/student-logs';
   providedIn: 'root',
 })
 export class StudentService {
-  private baseurl = 'http://ultatelstudents.runasp.net/api/Student';
+  private baseurl = 'https://ultatelstudents.runasp.net/api/Student';
   constructor(
     private http: HttpClient,
   ) {}
