@@ -89,16 +89,4 @@ export class AccountService {
   }
 
 
-
-  //login guard 
-  isTokenExpired(): boolean {
-    
-    if (this.token) {
-      const decodedToken: any = jwtDecode.jwtDecode(this.token);
-      const expirationDate = new Date(0);
-      expirationDate.setUTCSeconds(decodedToken.exp);
-      return expirationDate < new Date();
-    }
-    return true;
-  }
 }

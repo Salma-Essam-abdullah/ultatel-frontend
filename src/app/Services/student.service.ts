@@ -128,7 +128,7 @@ export class StudentService {
 
     return this.http.patch<StudentResponse>(url, student).pipe(
       map((response: StudentResponse) => {
-        console.log('PATCH response:', response); // Debugging log
+     
         return {
           message: response.message,
           isSucceeded: response.isSucceeded,
@@ -138,7 +138,7 @@ export class StudentService {
         };
       }),
       catchError((error) => {
-        console.error('Error occurred:', error); // Debugging log
+        
         const accountResponse: AccountResponse = {
           message: error.error.message || 'Validation Error',
           isSucceeded: false,
